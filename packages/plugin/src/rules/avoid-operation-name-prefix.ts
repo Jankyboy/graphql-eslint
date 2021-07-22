@@ -1,8 +1,8 @@
-import { GraphQLESLintRule, GraphQLESlintRuleContext } from '../types';
+import { GraphQLESLintRule, GraphQLESLintRuleContext } from '../types';
 import { GraphQLESTreeNode } from '../estree-parser/estree-ast';
 import { OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
 
-type AvoidOperationNamePrefixConfig = [
+export type AvoidOperationNamePrefixConfig = [
   {
     keywords: string[];
     caseSensitive?: boolean;
@@ -12,13 +12,15 @@ type AvoidOperationNamePrefixConfig = [
 const AVOID_OPERATION_NAME_PREFIX = 'AVOID_OPERATION_NAME_PREFIX';
 
 function verifyRule(
-  context: GraphQLESlintRuleContext<AvoidOperationNamePrefixConfig>,
+  context: GraphQLESLintRuleContext<AvoidOperationNamePrefixConfig>,
   node: GraphQLESTreeNode<OperationDefinitionNode> | GraphQLESTreeNode<FragmentDefinitionNode>
 ) {
-  const caseSensitive = context.options[0].caseSensitive;
+  const config = context.options[0] || { keywords: [], caseSensitive: false };
+  const caseSensitive = config.caseSensitive;
+  const keywords = config.keywords || [];
 
   if (node && node.name && node.name.value !== '') {
-    for (const keyword of context.options[0].keywords) {
+    for (const keyword of keywords) {
       const testKeyword = caseSensitive ? keyword : keyword.toLowerCase();
       const testName = caseSensitive ? node.name.value : node.name.value.toLowerCase();
 
@@ -49,20 +51,33 @@ const rule: GraphQLESLintRule<AvoidOperationNamePrefixConfig> = {
     type: 'suggestion',
     docs: {
       description:
-        'Enforce/avoid operation name prefix, useful if you wish to avoid prefix in your root fields, or avoid using REST terminology in your schema',
+        'Enforce/avoid operation name prefix, useful if you wish to avoid prefix in your root fields, or avoid using REST terminology in your schema.',
       category: 'Stylistic Issues',
-      recommended: false,
       url: 'https://github.com/dotansimha/graphql-eslint/blob/master/docs/rules/avoid-operation-name-prefix.md',
+      examples: [
+        {
+          title: 'Incorrect',
+          usage: [{ keywords: ['get'] }],
+          code: /* GraphQL */ `
+            query getUserDetails {
+              # ...
+            }`,
+        },
+        {
+          title: 'Correct',
+          usage: [{ keywords: ['get'] }],
+          code: /* GraphQL */ `
+            query userDetails {
+              # ...
+            }`,
+        },
+      ],
     },
     messages: {
       [AVOID_OPERATION_NAME_PREFIX]: `Forbidden operation name prefix: "{{ invalidPrefix }}"`,
     },
-    schema: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 1,
-      additionalItems: false,
-      items: {
+    schema: [
+      {
         additionalProperties: false,
         type: 'object',
         required: ['keywords'],
@@ -81,7 +96,7 @@ const rule: GraphQLESLintRule<AvoidOperationNamePrefixConfig> = {
           },
         },
       },
-    },
+    ],
   },
   create(context) {
     return {

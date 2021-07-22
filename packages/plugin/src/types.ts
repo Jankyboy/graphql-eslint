@@ -2,27 +2,32 @@ import { Rule, AST, Linter } from 'eslint';
 import { GraphQLESTreeNode } from './estree-parser';
 import { ASTNode, GraphQLSchema } from 'graphql';
 import { GraphQLParseOptions } from '@graphql-tools/utils';
-import { GraphQLProjectConfig } from 'graphql-config';
-import { GraphQLESlintRuleListener } from './testkit';
+import { GraphQLESLintRuleListener } from './testkit';
+import { SiblingOperations } from './sibling-operations';
+import { FieldsCache } from './graphql-ast';
 
-export interface ParserOptions extends Omit<GraphQLParseOptions, 'noLocation'> {
+export interface ParserOptions {
   schema?: string | string[];
-  schemaOptions?: Record<string, any>;
+  operations?: string | string[];
+  schemaOptions?: Omit<GraphQLParseOptions, 'assumeValidSDL'>;
+  graphQLParserOptions?: Omit<GraphQLParseOptions, 'noLocation'>;
   skipGraphQLConfig?: boolean;
   filePath?: string;
 }
 
 export type ParserServices = {
-  graphqlConfigProject: GraphQLProjectConfig | null;
+  siblingOperations: SiblingOperations;
   hasTypeInfo: boolean;
   schema: GraphQLSchema | null;
+  getReachableTypes: () => Set<string> | null;
+  getUsedFields: () => FieldsCache | null;
 };
 
 export type GraphQLESLintParseResult = Linter.ESLintParseResult & {
   services: ParserServices;
 };
 
-export type GraphQLESlintRuleContext<Options = any[]> = Omit<
+export type GraphQLESLintRuleContext<Options = any[]> = Omit<
   Rule.RuleContext,
   'parserServices' | 'report' | 'options'
 > & {
@@ -35,7 +40,20 @@ export type GraphQLESlintRuleContext<Options = any[]> = Omit<
   parserServices?: ParserServices;
 };
 
+export type RuleDocsInfo<T> = Rule.RuleMetaData & {
+  docs: {
+    category: 'Best Practices' | 'Stylistic Issues' | 'Validation';
+    requiresSchema?: boolean;
+    requiresSiblings?: boolean;
+    examples?: {
+      title: string;
+      code: string;
+      usage?: T;
+    }[];
+  };
+};
+
 export type GraphQLESLintRule<Options = any[], WithTypeInfo extends boolean = false> = {
-  create(context: GraphQLESlintRuleContext<Options>): GraphQLESlintRuleListener<WithTypeInfo>;
-  meta?: Rule.RuleMetaData;
+  create(context: GraphQLESLintRuleContext<Options>): GraphQLESLintRuleListener<WithTypeInfo>;
+  meta: Rule.RuleMetaData & RuleDocsInfo<Options>;
 };

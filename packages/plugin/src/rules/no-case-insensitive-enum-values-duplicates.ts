@@ -10,6 +10,28 @@ const rule: GraphQLESLintRule = {
         'https://github.com/dotansimha/graphql-eslint/blob/master/docs/rules/no-case-insensitive-enum-values-duplicates.md',
       category: 'Best Practices',
       recommended: true,
+      examples: [
+        {
+          title: 'Incorrect',
+          code: /* GraphQL */ `
+            enum MyEnum {
+              Value
+              VALUE
+              ValuE
+            }
+          `,
+        },
+        {
+          title: 'Correct',
+          code: /* GraphQL */ `
+            enum MyEnum {
+              Value1
+              Value2
+              Value3
+            }
+          `,
+        },
+      ],
     },
     fixable: 'code',
     messages: {

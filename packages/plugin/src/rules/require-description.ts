@@ -1,4 +1,4 @@
-import { GraphQLESLintRule, GraphQLESlintRuleContext } from '../types';
+import { GraphQLESLintRule, GraphQLESLintRuleContext } from '../types';
 import { GraphQLESTreeNode } from '../estree-parser/estree-ast';
 import { ASTNode, Kind, StringValueNode } from 'graphql';
 
@@ -18,7 +18,7 @@ const DESCRIBABLE_NODES = [
 type RequireDescriptionRuleConfig = [{ on: typeof DESCRIBABLE_NODES }];
 
 function verifyRule(
-  context: GraphQLESlintRuleContext<RequireDescriptionRuleConfig>,
+  context: GraphQLESLintRuleContext<RequireDescriptionRuleConfig>,
   node: GraphQLESTreeNode<ASTNode> & {
     readonly description?: GraphQLESTreeNode<StringValueNode>;
   }
@@ -49,9 +49,35 @@ const rule: GraphQLESLintRule<RequireDescriptionRuleConfig> = {
   meta: {
     docs: {
       category: 'Best Practices',
-      description: `Enforce descriptions in your type definitions`,
+      description: `Enforce descriptions in your type definitions.`,
       url: `https://github.com/dotansimha/graphql-eslint/blob/master/docs/rules/require-description.md`,
       recommended: true,
+      examples: [
+        {
+          title: 'Incorrect',
+          usage: [{ on: ['ObjectTypeDefinition', 'FieldDefinition'] }],
+          code: /* GraphQL */ `
+            type someTypeName {
+              name: String
+            }
+          `,
+        },
+        {
+          title: 'Correct',
+          usage: [{ on: ['ObjectTypeDefinition', 'FieldDefinition'] }],
+          code: /* GraphQL */ `
+            """
+            Some type description
+            """
+            type someTypeName {
+              """
+              Name description
+              """
+              name: String
+            }
+          `,
+        },
+      ],
     },
     type: 'suggestion',
     messages: {

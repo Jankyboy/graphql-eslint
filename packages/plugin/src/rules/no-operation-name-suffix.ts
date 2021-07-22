@@ -1,11 +1,11 @@
-import { GraphQLESLintRule, GraphQLESlintRuleContext } from '../types';
+import { GraphQLESLintRule, GraphQLESLintRuleContext } from '../types';
 import { GraphQLESTreeNode } from '../estree-parser/estree-ast';
 import { OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
 
 const NO_OPERATION_NAME_SUFFIX = 'NO_OPERATION_NAME_SUFFIX';
 
 function verifyRule(
-  context: GraphQLESlintRuleContext,
+  context: GraphQLESLintRuleContext,
   node: GraphQLESTreeNode<OperationDefinitionNode> | GraphQLESTreeNode<FragmentDefinitionNode>
 ) {
   if (node && node.name && node.name.value !== '') {
@@ -33,6 +33,24 @@ const rule: GraphQLESLintRule = {
       recommended: true,
       description: `Makes sure you are not adding the operation type to the name of the operation.`,
       url: `https://github.com/dotansimha/graphql-eslint/blob/master/docs/rules/no-operation-name-suffix.md`,
+      examples: [
+        {
+          title: 'Incorrect',
+          code: /* GraphQL */ `
+            query userQuery {
+              # ...
+            }
+          `,
+        },
+        {
+          title: 'Correct',
+          code: /* GraphQL */ `
+            query user {
+              # ...
+            }
+          `,
+        },
+      ],
     },
     messages: {
       [NO_OPERATION_NAME_SUFFIX]: `Unnecessary "{{ invalidSuffix }}" suffix in your operation name!`,

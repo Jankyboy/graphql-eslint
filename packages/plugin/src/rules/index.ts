@@ -1,4 +1,5 @@
-import validate from './validate-against-schema';
+import noUnreachableTypes from './no-unreachable-types';
+import noUnusedFields from './no-unused-fields';
 import noAnonymousOperations from './no-anonymous-operations';
 import noOperationNameSuffix from './no-operation-name-suffix';
 import requireDeprecationReason from './require-deprecation-reason';
@@ -7,22 +8,38 @@ import noCaseInsensitiveEnumValuesDuplicates from './no-case-insensitive-enum-va
 import requireDescription from './require-description';
 import requireIdWhenAvailable from './require-id-when-available';
 import descriptionStyle from './description-style';
-import prettier from './prettier';
 import namingConvention from './naming-convention';
 import inputName from './input-name';
-import { GraphQLESLintRule } from '../types';
+import uniqueFragmentName from './unique-fragment-name';
+import uniqueOperationName from './unique-operation-name';
+import noDeprecated from './no-deprecated';
+import noHashtagDescription from './no-hashtag-description';
+import selectionSetDepth from './selection-set-depth';
+import avoidDuplicateFields from './avoid-duplicate-fields';
+import strictIdInTypes from './strict-id-in-types';
+import avoidTypenamePrefix from './avoid-typename-prefix';
+import { GRAPHQL_JS_VALIDATIONS } from './graphql-js-validation';
 
-export const rules: Record<string, GraphQLESLintRule> = {
-  'validate-against-schema': validate,
+export const rules = {
+  'avoid-typename-prefix': avoidTypenamePrefix,
+  'no-unreachable-types': noUnreachableTypes,
+  'no-unused-fields': noUnusedFields,
+  'no-deprecated': noDeprecated,
+  'unique-fragment-name': uniqueFragmentName,
+  'unique-operation-name': uniqueOperationName,
+  'no-hashtag-description': noHashtagDescription,
   'no-anonymous-operations': noAnonymousOperations,
   'no-operation-name-suffix': noOperationNameSuffix,
   'require-deprecation-reason': requireDeprecationReason,
   'avoid-operation-name-prefix': avoidOperationNamePrefix,
+  'selection-set-depth': selectionSetDepth,
   'no-case-insensitive-enum-values-duplicates': noCaseInsensitiveEnumValuesDuplicates,
   'require-description': requireDescription,
   'require-id-when-available': requireIdWhenAvailable,
   'description-style': descriptionStyle,
-  prettier: prettier,
+  'avoid-duplicate-fields': avoidDuplicateFields,
   'naming-convention': namingConvention,
   'input-name': inputName,
+  'strict-id-in-types': strictIdInTypes,
+  ...GRAPHQL_JS_VALIDATIONS,
 };

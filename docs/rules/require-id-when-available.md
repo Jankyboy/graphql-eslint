@@ -1,18 +1,18 @@
-## Require querying id (or other field) when field exists
+# `require-id-when-available`
 
-- Name: `require-id-when-available`
-- Requires GraphQL Schema: `true`
+- Category: `Best Practices`
+- Rule name: `@graphql-eslint/require-id-when-available`
+- Requires GraphQL Schema: `true` [ℹ️](../../README.md#extended-linting-rules-with-graphql-schema)
+- Requires GraphQL Operations: `true` [ℹ️](../../README.md#extended-linting-rules-with-siblings-operations)
 
-This rule allow you to enforce selecting specific fields when they are available on the GraphQL type.
+Enforce selecting specific fields when they are available on the GraphQL type.
 
-It's useful for GraphQL client libraries that are using `id` field for caching (when queried).
+## Usage Examples
 
-### Usage Example
-
-Examples of **incorrect** code for this rule:
+### Incorrect
 
 ```graphql
-# eslint @graphql-eslint/require-id-when-available: ["error"]
+# eslint @graphql-eslint/require-id-when-available: 'error'
 
 # In your schema
 type User {
@@ -28,10 +28,10 @@ query user {
 }
 ```
 
-Examples of **correct** code for this rule:
+### Correct
 
 ```graphql
-# eslint @graphql-eslint/require-id-when-available: ["error"]
+# eslint @graphql-eslint/require-id-when-available: 'error'
 
 # In your schema
 type User {
@@ -47,3 +47,15 @@ query user {
   }
 }
 ```
+
+## Config Schema
+
+### (array)
+
+The schema defines an array with all elements of the type `object`.
+
+The array object has the following properties:
+
+#### `fieldName` (string)
+
+Default: `"id"`

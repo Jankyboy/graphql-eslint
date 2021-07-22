@@ -1,10 +1,10 @@
+This project integrates GraphQL and ESLint, for a better developer experience.
+
 <p align="left">
   <img height="150" src="./logo.png">
 </p>
 
 [![npm version](https://badge.fury.io/js/%40graphql-eslint%2Feslint-plugin.svg)](https://badge.fury.io/js/%40graphql-eslint%2Feslint-plugin)
-
-This project integrates GraphQL and ESLint, for a better developer experience.
 
 > Created and maintained by [The Guild](http://the-guild.dev/)
 
@@ -26,7 +26,7 @@ This project integrates GraphQL and ESLint, for a better developer experience.
 
 ## Getting Started
 
-* [Introducing GraphQL-ESLint!](https://the-guild.dev/blog/introducing-graphql-eslint) @ `the-guild.dev`
+- [Introducing GraphQL-ESLint!](https://the-guild.dev/blog/introducing-graphql-eslint) @ `the-guild.dev`
 
 ### Installation
 
@@ -45,6 +45,8 @@ npm install --save-dev @graphql-eslint/eslint-plugin
 > Also, make sure you have `graphql` dependency in your project.
 
 ### Configuration
+
+> Note: This plugin doesn't activate any rule by default at the moment, we are currently thinking of the right rules to be the "recommended" and the default set. Until then, please make sure to active rules based on your needs.
 
 To get started, create an override configuration for your ESLint, while applying it to to `.graphql` files (do that even if you are declaring your operations in code files):
 
@@ -76,7 +78,9 @@ If you are using code files to store your GraphQL schema or your GraphQL operati
       "files": ["*.graphql"],
       "parser": "@graphql-eslint/eslint-plugin",
       "plugins": ["@graphql-eslint"],
-      "rules": { ... }
+      "rules": {
+        ...
+      }
     }
   ]
 }
@@ -105,6 +109,28 @@ The parser allow you to specify a json file / graphql files(s) / url / raw strin
 
 > Some rules requires type information to operate, it's marked in the docs of each plugin!
 
+#### Extended linting rules with siblings operations
+
+While implementing this tool, we had to find solutions for a better integration of the GraphQL ecosystem and ESLint core.
+
+GraphQL operations can be distributed across many files, while ESLint operates on one file at a time. If you are using GraphQL fragments in separate files, some rules might yield incorrect results, due the the missing information.
+
+To workaround that, we allow you to provide additional information on your GraphQL operations, making it available for rules while doing the actual linting.
+
+To provide that, we are using `@graphql-tools` loaders to load your sibling operations and fragments, just specify a glob expression(s) that points to your code/.graphql files:
+
+```json
+{
+  "files": ["*.graphql"],
+  "parser": "@graphql-eslint/eslint-plugin",
+  "plugins": ["@graphql-eslint"],
+  "parserOptions": {
+    "operations": ["./src/**/*.graphql"],
+    "schema": "./schema.graphql"
+  }
+}
+```
+
 ### VSCode Integration
 
 By default, [ESLint VSCode plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) will not lint files with extensions other then js, jsx, ts, tsx.
@@ -114,11 +140,10 @@ In order to enable it processing other extensions, add the following section in 
 ```json
 {
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "graphql"],
-  "eslint.options": {
-    "extentions": [".js", ".graphql"]
-  }
 }
 ```
+
+Currently, you also need a GraphQL IDE extension for syntax highlighting installed (which may potentially have its own linting) - for example [GraphQL (by GraphQL Foundation)](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql).
 
 ### Disabling Rules
 
@@ -143,10 +168,69 @@ You can find a complete list of [all available rules here](./docs/README.md)
 
 > This repo doesn't exports a "recommended" set of rules - feel free to recommend us!
 
+### `prettier` rule
+
+The original `prettier` rule has been removed because `eslint-plugin-prettier` supports `.graphql` files well actually.
+
+All you need to do is like the following for now:
+
+```js
+// .eslintrc.js
+module.exports = {
+  overrides: [
+    {
+      files: ['*.tsx', '*.ts', '*.jsx', '*.js'],
+      processor: '@graphql-eslint/graphql',
+    },
+    {
+      files: ['*.graphql'],
+      parser: '@graphql-eslint/eslint-plugin',
+      plugins: ['@graphql-eslint'],
+      // the following is required for `eslint-plugin-prettier@<=3.4.0` temporarily
+      // after https://github.com/prettier/eslint-plugin-prettier/pull/413
+      // been merged and released, it can be deleted safely
+      rules: {
+        'prettier/prettier': [
+          2,
+          {
+            parser: 'graphql',
+          },
+        ],
+      },
+    },
+    // the following is required for `eslint-plugin-prettier@<=3.4.0` temporarily
+    // after https://github.com/prettier/eslint-plugin-prettier/pull/415
+    // been merged and released, it can be deleted safely
+    {
+      files: ['*.js/*.graphql'],
+      rules: {
+        'prettier/prettier': 0
+      }
+    },
+  ],
+};
+```
+
+You can take [`examples/prettier`](examples/prettier/.eslintrc.js) as example.
+
+It could be better to remove the unnecessary parser setting if https://github.com/prettier/eslint-plugin-prettier/pull/413 and https://github.com/prettier/eslint-plugin-prettier/pull/415 been merged and released.
+
+Please help to vote up if you want to speed up the progress.
+
 ## Further Reading
 
 If you wish to learn more about this project, how the parser works, how to add custom rules and more, [please refer to the docs directory](./docs/README.md))
 
-## Contributing
+## Contributions
 
-If you think a rule is missing, or can be modified, feel free to report issues, on open PRs. We always welcome contributions.
+Contributions, issues and feature requests are very welcome. If you are using this package and fixed a bug for yourself, please consider submitting a PR!
+
+And if this is your first time contributing to this project, please do read our [Contributor Workflow Guide](https://github.com/the-guild-org/Stack/blob/master/CONTRIBUTING.md) before you get started off.
+
+### Code of Conduct
+
+Help us keep GraphQL ESLint open and inclusive. Please read and follow our [Code of Conduct](https://github.com/the-guild-org/Stack/blob/master/CODE_OF_CONDUCT.md) as adopted from [Contributor Covenant](https://www.contributor-covenant.org/)
+
+## License
+
+Released under the [MIT license](./LICENSE).

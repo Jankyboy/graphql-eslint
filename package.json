@@ -5,39 +5,56 @@
   "license": "MIT",
   "workspaces": [
     "./packages/*",
-    "./example"
+    "./examples/*"
   ],
+  "husky": {
+    "pre-commit": "yarn generate:docs"
+  },
   "scripts": {
+    "generate:docs": "ts-node --compiler-options='{\"module\":\"commonjs\"}' scripts/generate-docs.ts",
+    "postinstall": "patch-package",
     "lint": "eslint --config .eslintrc.json --ext .ts .",
     "prebuild": "rimraf packages/*/dist",
-    "build": "tsc --project tsconfig.json && bob build",
+    "transpile-ts": "tsc --project tsconfig.json",
+    "build": "yarn transpile-ts && bob build",
     "postbuild": "cp -r README.md docs ./packages/plugin/dist/",
-    "test": "jest",
+    "test": "jest --no-watchman --forceExit",
     "prerelease": "yarn build",
     "release": "changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\""
   },
   "devDependencies": {
-    "@changesets/cli": "2.10.3",
-    "@typescript-eslint/eslint-plugin": "4.4.0",
-    "@typescript-eslint/parser": "4.4.0",
-    "eslint": "7.11.0",
-    "husky": "4.3.0",
-    "lint-staged": "10.4.0",
-    "@types/node": "14.11.8",
-    "bob-the-bundler": "1.1.0",
-    "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.22.1",
+    "@babel/core": "7.14.8",
+    "@babel/preset-env": "7.14.8",
+    "@babel/preset-typescript": "7.14.5",
+    "@changesets/cli": "2.16.0",
+    "@types/dedent": "0.7.0",
+    "@types/jest": "26.0.24",
+    "@types/node": "14.17.5",
+    "@typescript-eslint/eslint-plugin": "4.28.4",
+    "@typescript-eslint/parser": "4.28.4",
+    "bob-the-bundler": "1.2.1",
+    "dedent": "0.7.0",
+    "eslint": "7.31.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.23.4",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.1",
-    "eslint-config-prettier": "6.12.0",
-    "@types/jest": "26.0.14",
-    "ts-jest": "26.4.1",
+    "eslint-plugin-promise": "5.1.0",
+    "eslint-plugin-standard": "5.0.0",
+    "husky": "7.0.1",
+    "jest": "27.0.6",
+    "json-schema-to-markdown": "1.1.1",
+    "lint-staged": "11.1.0",
+    "patch-package": "6.4.7",
     "rimraf": "3.0.2",
-    "typescript": "4.0.3",
-    "jest": "26.5.3"
+    "ts-jest": "27.0.4",
+    "ts-node": "10.1.0",
+    "typescript": "4.3.5"
+  },
+  "resolutions": {
+    "@changesets/git": "1.1.1"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
