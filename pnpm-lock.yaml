@@ -4,18 +4,18 @@ overrides:
   graphql: 16.6.0
 
 patchedDependencies:
-  eslint@8.35.0:
-    hash: v7lv2hbnxmm2b22qo3sob3rjvq
-    path: patches/eslint@8.31.0.patch
-  eslint-plugin-eslint-plugin@5.0.7:
-    hash: cdhdgvmsbh3fbusrlxsl6de2he
-    path: patches/eslint-plugin-eslint-plugin@5.0.6.patch
-  json-schema-to-markdown@1.1.1:
-    hash: beglqnggvhpsclgwbdw27hzvu4
-    path: patches/json-schema-to-markdown@1.1.1.patch
   '@vitest/runner@0.29.1':
     hash: 22k4fsskoeieob62btkupydhfa
     path: patches/@vitest__runner@0.28.4.patch
+  eslint-plugin-eslint-plugin@5.0.7:
+    hash: cdhdgvmsbh3fbusrlxsl6de2he
+    path: patches/eslint-plugin-eslint-plugin@5.0.6.patch
+  eslint@8.35.0:
+    hash: v7lv2hbnxmm2b22qo3sob3rjvq
+    path: patches/eslint@8.31.0.patch
+  json-schema-to-markdown@1.1.1:
+    hash: beglqnggvhpsclgwbdw27hzvu4
+    path: patches/json-schema-to-markdown@1.1.1.patch
 
 importers:
 
@@ -25,7 +25,7 @@ importers:
       '@changesets/cli': 2.26.0
       '@graphql-tools/utils': 9.2.1
       '@theguild/eslint-config': 0.8.0
-      '@theguild/prettier-config': 1.1.2
+      '@theguild/prettier-config': 1.1.3
       '@types/dedent': 0.7.0
       '@types/node': 18.14.6
       bob-the-bundler: 5.0.1
@@ -49,7 +49,7 @@ importers:
       '@changesets/cli': 2.26.0
       '@graphql-tools/utils': 9.2.1
       '@theguild/eslint-config': 0.8.0_ycpbpc6yetojsgtrx3mwntkhsu
-      '@theguild/prettier-config': 1.1.2_prettier@2.8.4
+      '@theguild/prettier-config': 1.1.3_prettier@2.8.4
       '@types/dedent': 0.7.0
       '@types/node': 18.14.6
       bob-the-bundler: 5.0.1_typescript@4.9.5
@@ -568,7 +568,7 @@ packages:
     resolution: {integrity: sha512-oLcVCTeIFadUoArDTwpluncplrYBmTCCZZgXCbgNGvOBBiSDDK3eWO4b/+eOTli5tKv1lg+a5/NAXg+nTcei1w==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.17.0
+      '@babel/types': 7.21.2
       jsesc: 2.5.2
       source-map: 0.5.7
     dev: true
@@ -581,7 +581,6 @@ packages:
       '@jridgewell/gen-mapping': 0.3.2
       '@jridgewell/trace-mapping': 0.3.17
       jsesc: 2.5.2
-    dev: false
 
   /@babel/helper-environment-visitor/7.18.9:
     resolution: {integrity: sha512-3r/aACDJ3fhQ/EVgFy0hpj8oHyHpQc+LPtJoY9SzTThAsStm4Ptegq92vqKoE3vD706ZVFWITnMnxucw+S9Ipg==}
@@ -662,13 +661,13 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.18.6
-      '@babel/generator': 7.17.7
+      '@babel/generator': 7.21.1
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.21.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/parser': 7.21.2
-      '@babel/types': 7.17.0
+      '@babel/types': 7.21.2
       debug: 4.3.4
       globals: 11.12.0
     transitivePeerDependencies:
@@ -1717,7 +1716,6 @@ packages:
       '@jridgewell/set-array': 1.1.2
       '@jridgewell/sourcemap-codec': 1.4.14
       '@jridgewell/trace-mapping': 0.3.17
-    dev: false
 
   /@jridgewell/resolve-uri/3.1.0:
     resolution: {integrity: sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==}
@@ -1726,7 +1724,6 @@ packages:
   /@jridgewell/set-array/1.1.2:
     resolution: {integrity: sha512-xnkseuNADM0gt2bs+BvhO0p78Mk762YnZdsuzFV018NoG1Sj1SCQvpSqa7XUaTam5vAGasABV9qXASMKnFMwMw==}
     engines: {node: '>=6.0.0'}
-    dev: false
 
   /@jridgewell/sourcemap-codec/1.4.14:
     resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
@@ -1736,7 +1733,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-    dev: false
 
   /@jridgewell/trace-mapping/0.3.9:
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
@@ -2574,8 +2570,8 @@ packages:
       - typescript
     dev: true
 
-  /@theguild/prettier-config/1.1.2_prettier@2.8.4:
-    resolution: {integrity: sha512-G4zChCRSSv6B9usDnJNkJOL6as/TmfP6LMLbmpnbATVARzArY4nGTRFD5NQBH64SbVLrmfvtbOGJJIBUtDOU+w==}
+  /@theguild/prettier-config/1.1.3_prettier@2.8.4:
+    resolution: {integrity: sha512-7DVlTDzzmvdPOblqY03b6UkZ0igw71H0274ZCljvFf8Vi5Ibfnwzl2+73nIWTaGkO7tm2si8HusfN9JV3+v96w==}
     peerDependencies:
       prettier: ^2
     dependencies:
